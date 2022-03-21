@@ -36,17 +36,23 @@
 </head>
 
 <body>
-    <svg height="100" width="100">
-        <circle id="svg-circle" cx="50" cy="50" r="40" stroke="red" stroke-width="3" fill="transparent" />
-    </svg>
-    <div id="tracking-cursor">
-        <div id="screenCoords" style="font-size:36px; color: #FFF;"></div>
+    <!-- <svg id='svg' height='100' width='100'> -->
+        <!-- <circle id="svg-circle" cx="50" cy="50" r="40" stroke="red" stroke-width="3" fill="transparent" /> -->
+    <!-- </svg> -->
+    <div id='tracking-cursor'>
+        <!-- <div id='screenCoords' style='font-size:36px; color: #FFF;'></div> -->
     </div>
 
     <script>
-        function findScreenCoords(mouseEvent) {
-            var xpos;
-            var ypos;
+        svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('id', 'svg');
+        svg.setAttribute('height', '1000')
+        svg.setAttribute('width', '1920')
+        document.getElementById('tracking-cursor').appendChild(svg);
+
+        function findScreenCoords(mouseEvent) { 
+            let xpos;
+            let ypos;
             if (mouseEvent) {
                 //FireFox
                 xpos = mouseEvent.screenX;
@@ -57,9 +63,20 @@
                 xpos = window.event.screenX;
                 ypos = window.event.screenY;
             }
-            document.getElementById("svgCircle").setAttribute("cx", `${xpos}`);
-            document.getElementById("svgCircle").setAttribute("cy", `${ypos}`);
-            document.getElementById("screenCoords").innerHTML = xpos + ", " + ypos;
+            
+            if(svg.lastElementChild) {
+              svg.removeChild(svg.lastElementChild);
+            }
+
+            circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('r', '50');
+            circle.setAttribute('fill', 'transparent'); 
+            circle.setAttribute('stroke', 'red');
+            circle.setAttribute('stroke-width', '3');
+            circle.setAttribute('cx', `${xpos}`);
+            circle.setAttribute('cy', `${ypos}`);
+            //document.getElementById("screenCoords").innerHTML = xpos + ", " + ypos;
+            document.getElementById("svg").appendChild(circle);
             console.log(xpos + "," + ypos);
         }
         document.getElementById("tracking-cursor").onmousemove = findScreenCoords;

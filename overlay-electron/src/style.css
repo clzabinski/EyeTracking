@@ -6,10 +6,9 @@ html, body{
 #tracking-cursor{
     text-align:center; 
     height:1000px; 
-    background-color:#ccc;
     /* position: absolute; */
 }
 
-#svg-circle{
+/* #svg-circle{ */
     /* z-index: 9; */
-}
+/* } */
