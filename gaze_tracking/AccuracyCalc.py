@@ -1,7 +1,7 @@
 
 
 class Accuracy():
-    result = list()
-    def calcAccuracy(Object):
 
-        return
+    def calcaccuracy(Object):
+        result = list()
+        return result
