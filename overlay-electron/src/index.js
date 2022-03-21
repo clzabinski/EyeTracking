@@ -1,6 +1,20 @@
-function initDraw(canvas) {
-    var ctx = canvas.getContext("2d")
-    ctx.beginPath();
-    ctx.rect(20, 20, 150, 100);
-    ctx.stroke();
+function findScreenCoords(mouseEvent)
+{
+  var xpos;
+  var ypos;
+  if (mouseEvent)
+  {
+    //FireFox
+    xpos = mouseEvent.screenX;
+    ypos = mouseEvent.screenY;
+  }
+  else
+  {
+    //IE
+    xpos = window.event.screenX;
+    ypos = window.event.screenY;
+  }
+  document.getElementById("screenCoords").innerHTML = xpos + ", " + ypos;
+  console.log(xpos + "," + ypos);
 }
+document.getElementById("tracking-cursor").onmousemove = findScreenCoords;

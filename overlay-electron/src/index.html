@@ -30,10 +30,47 @@
 
 <!DOCTYPE html>
 <html>
-<head>
 
+<head>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1 style="color: #FFF">Hello World!</h1>
+    <svg height="100" width="100">
+        <circle id="svg-circle" cx="50" cy="50" r="40" stroke="red" stroke-width="3" fill="transparent" />
+    </svg>
+    <div id="tracking-cursor">
+        <div id="screenCoords" style="font-size:36px; color: #FFF;"></div>
+    </div>
+
+    <script>
+        function findScreenCoords(mouseEvent) {
+            var xpos;
+            var ypos;
+            if (mouseEvent) {
+                //FireFox
+                xpos = mouseEvent.screenX;
+                ypos = mouseEvent.screenY;
+            }
+            else {
+                //IE
+                xpos = window.event.screenX;
+                ypos = window.event.screenY;
+            }
+            document.getElementById("svgCircle").setAttribute("cx", `${xpos}`);
+            document.getElementById("svgCircle").setAttribute("cy", `${ypos}`);
+            document.getElementById("screenCoords").innerHTML = xpos + ", " + ypos;
+            console.log(xpos + "," + ypos);
+        }
+        document.getElementById("tracking-cursor").onmousemove = findScreenCoords;
+    </script>
+
+    <div class="left-tracker">
+
+    </div>
+    <div class="left-tracker">
+
+    </div>
 </body>
+
 </html>
