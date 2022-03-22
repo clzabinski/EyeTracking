@@ -1,7 +1,12 @@
-
+from mpmath import cot
+import math
 
 class Accuracy():
+    result = list[]
+    def calcaccuracy(Object, d):#Make this use a point class
 
-    def calcaccuracy(Object):
-        result = list()
-        return result
+        theta = cot(math.sqrt(math.pow()-math.pow())/d)
+
+
+
+        return theta
