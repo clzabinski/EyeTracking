@@ -37,20 +37,29 @@
 
 <body>
     <!-- <svg id='svg' height='100' width='100'> -->
-        <!-- <circle id="svg-circle" cx="50" cy="50" r="40" stroke="red" stroke-width="3" fill="transparent" /> -->
+    <!-- <circle id="svg-circle" cx="50" cy="50" r="40" stroke="red" stroke-width="3" fill="transparent" /> -->
     <!-- </svg> -->
     <div id='tracking-cursor'>
         <!-- <div id='screenCoords' style='font-size:36px; color: #FFF;'></div> -->
     </div>
 
     <script>
+        fetch('http://127.0.0.1:5000/coordinates')
+            .then(function (response) {
+                console.log(response.json());
+                return response.json();
+            }).then(function (text) {
+                console.log('GET response:');
+                console.log(x + ',' + y);
+            });
         svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('id', 'svg');
+        //TODO: change height width to dynamic change based on users resolution 
         svg.setAttribute('height', '1080')
         svg.setAttribute('width', '1920')
         document.getElementById('tracking-cursor').appendChild(svg);
 
-        function findScreenCoords(mouseEvent) { 
+        function findScreenCoords(mouseEvent) {
             let xpos;
             let ypos;
             if (mouseEvent) {
@@ -63,14 +72,14 @@
                 xpos = window.event.screenX;
                 ypos = window.event.screenY;
             }
-            
-            if(svg.lastElementChild) {
-              svg.removeChild(svg.lastElementChild);
+
+            if (svg.lastElementChild) {
+                svg.removeChild(svg.lastElementChild);
             }
 
             circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('r', '50');
-            circle.setAttribute('fill', 'transparent'); 
+            circle.setAttribute('r', '20');
+            circle.setAttribute('fill', 'transparent');
             circle.setAttribute('stroke', 'red');
             circle.setAttribute('stroke-width', '3');
             circle.setAttribute('cx', `${xpos}`);
@@ -82,12 +91,6 @@
         document.getElementById("tracking-cursor").onmousemove = findScreenCoords;
     </script>
 
-    <div class="left-tracker">
-
-    </div>
-    <div class="left-tracker">
-
-    </div>
 </body>
 
 </html>
