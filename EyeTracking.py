@@ -7,7 +7,9 @@ import cv2
 from keyboard import is_pressed
 from gaze_tracking import GazeTracking
 from DataLib import take_point
+from ScreenResolution import screen_measurement
 
+screen = screen_measurement()
 def main():
     gaze = GazeTracking()
     webcam = cv2.VideoCapture(0)
