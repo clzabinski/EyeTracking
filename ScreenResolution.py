@@ -1,4 +1,3 @@
-from platform import platform
 import subprocess
 import sys
 import ctypes
@@ -14,7 +13,7 @@ class ScreenMeasurement:
 
     elif sys.platform.startswith("linux"):
         output = subprocess.Popen(
-            'xrandr | grep "\*" | cut -d" " -f4', shell=True, stdout=subprocess.PIPE
+            'xrandr | grep "\\*" | cut -d" " -f4', shell=True, stdout=subprocess.PIPE
         ).communicate()[0]
         print(output)
 
