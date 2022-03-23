@@ -1,5 +1,6 @@
 from crypt import methods
-from flask import Flask, jsonify, request, render_template
+import json
+from flask import Flask, jsonify, request, render_template, after_this_request
 app = Flask(__name__)
 
 @app.route('/')
@@ -9,10 +10,17 @@ def home_page():
 
 @app.route('/coordinates', methods=['GET'])
 def get_coordinates():
-    coordinates = {
+    @after_this_request
+    def add_header(response):
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    
+    jsonResp = {
         'x':50, 
         'y':50
         }
-    return jsonify(coordinates)
+    print(jsonResp)
+    return jsonify(jsonResp)
 
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
