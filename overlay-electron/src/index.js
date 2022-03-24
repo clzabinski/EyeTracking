@@ -10,7 +10,7 @@ function getCoordinates() {
   fetch(url)
     .then(response => response.json())
     .then(data => {
-      console.log(json);
+      console.log(data);
       let xCord = data.x;
       let yCord = data.y;
       drawSvg(xCord, yCord);
