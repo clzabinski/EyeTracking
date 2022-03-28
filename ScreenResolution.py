@@ -4,7 +4,7 @@ import sys
 import ctypes
 
 
-class ScreenMeasurement:
+class ScreenResolution:
     if sys.platform.startswith("win32"):
 
         def __init__(self):
@@ -18,6 +18,5 @@ class ScreenMeasurement:
         ).communicate()[0]
         print(output)
 
-
-def screen_measurement():
-    return ScreenMeasurement()
+    def screen_resolution(self):
+        return ScreenResolution()

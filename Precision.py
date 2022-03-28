@@ -1,13 +1,16 @@
 from cmath import sqrt
+from Accuracy import accuracy_average
+from Accuracy import calc_accuracy
 
 
 class Precision:
     def __init__(self):
-        self.r = precision(,)
+        self.r = self.precision(calc_accuracy(type(list)),accuracy_average())
 
 
-def precision(theta_i_list, theta_average):
+def precision(calc_accuracy(type(list)), accuracy_average()):
     r = 0
-    for n in range(theta_i_list):
-        r += n * (theta_i_list[:n] - theta_average)^2
+    n = 0
+    for n in range(calc_accuracy(type(list))):
+        r += n * (calc_accuracy(type(list))[:n] - accuracy_average())^2
     return sqrt(r*1/n)
