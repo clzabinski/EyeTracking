@@ -1,0 +1,10 @@
+html, body{
+    height: 100%;
+    margin: 0;
+}
+
+#tracking-cursor{
+    text-align:center; 
+    height:1000px; 
+    /* position: absolute; */
+}
