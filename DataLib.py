@@ -1,10 +1,12 @@
 import csv
 import os.path
+import time
 
 header = ["Left Pupil", "Right Pupil", "Horizontal Value", "Vertical Value", "Gaze Location"]
 
 
 def take_point(left_pupil, right_pupil, horiz_val, vert_val, gaze_location):
+    print(f"Taking datapoints: {left_pupil}, {right_pupil}, {horiz_val}, {vert_val}, {gaze_location}")
     row = {
         'Left Pupil': left_pupil,
         'Right Pupil': right_pupil,
@@ -19,3 +21,5 @@ def take_point(left_pupil, right_pupil, horiz_val, vert_val, gaze_location):
         if not file_exists:
             writer.writeheader()
         writer.writerow(row)
+
+    time.sleep(0.1)
