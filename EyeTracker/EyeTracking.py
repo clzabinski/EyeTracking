@@ -6,10 +6,10 @@ Check the README.md for complete documentation.
 from math import floor
 from MathLib import calc_accuracy, calc_accuracy_avg, calc_precision
 import cv2
-import imutils
 from keyboard import is_pressed
 from gaze_tracking import GazeTracking
 from DataLib import take_point
+from ..API.app import pass_coordinates
 import ScreenResolution
 
 screenrez = ScreenResolution.get_screen_resolution()
@@ -54,6 +54,7 @@ def main():
 
         if left_pupil and right_pupil:
             middle_pupil = (floor((left_pupil[0] + right_pupil[0]) / 2), floor((left_pupil[1] + right_pupil[1]) / 2))
+            pass_coordinates(middle_pupil)
             x_mid, y_mid = middle_pupil
             cv2.line(frame, (int(x_mid) - 5, int(y_mid)), (int(x_mid) + 5, int(y_mid)), (0,0,255))
             cv2.line(frame, (int(x_mid), int(y_mid) - 5), (int(x_mid), int(y_mid) + 5), (0,0,255))
