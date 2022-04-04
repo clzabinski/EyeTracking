@@ -34,8 +34,8 @@ def main():
         # imutils.resize(frame, width=1920, height=1080)
         # We send this frame to GazeTracking to analyze it
         gaze.refresh(frame)
-
         frame = gaze.annotated_frame()
+        frame = cv2.resize(frame, (1920, 1080), interpolation=cv2.INTER_AREA)
         text = ""
 
         if gaze.is_blinking():
