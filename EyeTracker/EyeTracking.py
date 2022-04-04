@@ -31,11 +31,12 @@ def main():
     while True:
         # We get a new frame from the webcam
         _, frame = webcam.read()
+        frame = cv2.flip(frame, 1)
         # imutils.resize(frame, width=1920, height=1080)
         # We send this frame to GazeTracking to analyze it
         gaze.refresh(frame)
         frame = gaze.annotated_frame()
-        frame = cv2.resize(frame, (1920, 1080), interpolation=cv2.INTER_AREA)
+        # frame = cv2.resize(frame, (1920, 1080), interpolation=cv2.INTER_AREA)
         text = ""
 
         if gaze.is_blinking():
@@ -53,32 +54,32 @@ def main():
 
         left_pupil = gaze.pupil_left_coords()
         right_pupil = gaze.pupil_right_coords()
-        middle_pupil = None
+        middle_point = None
 
         try:
             if left_pupil and right_pupil:
-                middle_pupil = (
-                    floor((left_pupil[0] + right_pupil[0]) / 2),
-                    floor((left_pupil[1] + right_pupil[1]) / 2),
+                if gaze.horizontal_ratio():
+                    horiz_ratio = gaze.horizontal_ratio()
+                    vert_ratio = gaze.vertical_ratio()
+                    middle_point = (floor(1280 * horiz_ratio), floor(720 * vert_ratio))
+
+                cv2.line(
+                    frame,
+                    (int(middle_point[0]) - 5, int(middle_point[1])),
+                    (int(middle_point[0]) + 5, int(middle_point[1])),
+                    (0, 0, 255),
                 )
+                cv2.line(
+                    frame,
+                    (int(middle_point[0]), int(middle_point[1]) - 5),
+                    (int(middle_point[0]), int(middle_point[1]) + 5),
+                    (0, 0, 255),
+                )
+
                 requests.post(
                     "http://127.0.0.1:5000/coordinates",
                     data={"x": middle_pupil[0], "y": middle_pupil[1]},
                 )
-                x_mid, y_mid = middle_pupil
-                cv2.line(
-                    frame,
-                    (int(x_mid) - 5, int(y_mid)),
-                    (int(x_mid) + 5, int(y_mid)),
-                    (0, 0, 255),
-                )
-                cv2.line(
-                    frame,
-                    (int(x_mid), int(y_mid) - 5),
-                    (int(x_mid), int(y_mid) + 5),
-                    (0, 0, 255),
-                )
-
         except:
             pass
         cv2.putText(
@@ -101,7 +102,7 @@ def main():
         )
         cv2.putText(
             frame,
-            "Nose Bridge: " + str(middle_pupil),
+            "Middle point: " + str(middle_point),
             (90, 200),
             cv2.FONT_HERSHEY_DUPLEX,
             0.9,
