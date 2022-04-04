@@ -11,6 +11,7 @@ from MathLib import calc_accuracy, calc_accuracy_avg, calc_precision
 import cv2
 from keyboard import is_pressed
 from gaze_tracking import GazeTracking
+import imutils
 from DataLib import take_point
 import ScreenResolution
 
@@ -54,13 +55,32 @@ def main():
         right_pupil = gaze.pupil_right_coords()
         middle_pupil = None
 
-        if left_pupil and right_pupil:
-            middle_pupil = (floor((left_pupil[0] + right_pupil[0]) / 2), floor((left_pupil[1] + right_pupil[1]) / 2))
-            requests.post('http://127.0.0.1:5000/coordinates', data={'x': middle_pupil[0], 'y': middle_pupil[1]})
-            x_mid, y_mid = middle_pupil
-            cv2.line(frame, (int(x_mid) - 5, int(y_mid)), (int(x_mid) + 5, int(y_mid)), (0,0,255))
-            cv2.line(frame, (int(x_mid), int(y_mid) - 5), (int(x_mid), int(y_mid) + 5), (0,0,255))
+        try:
+            if left_pupil and right_pupil:
+                middle_pupil = (
+                    floor((left_pupil[0] + right_pupil[0]) / 2),
+                    floor((left_pupil[1] + right_pupil[1]) / 2),
+                )
+                requests.post(
+                    "http://127.0.0.1:5000/coordinates",
+                    data={"x": middle_pupil[0], "y": middle_pupil[1]},
+                )
+                x_mid, y_mid = middle_pupil
+                cv2.line(
+                    frame,
+                    (int(x_mid) - 5, int(y_mid)),
+                    (int(x_mid) + 5, int(y_mid)),
+                    (0, 0, 255),
+                )
+                cv2.line(
+                    frame,
+                    (int(x_mid), int(y_mid) - 5),
+                    (int(x_mid), int(y_mid) + 5),
+                    (0, 0, 255),
+                )
 
+        except:
+            pass
         cv2.putText(
             frame,
             "Left pupil:  " + str(left_pupil),
@@ -85,8 +105,8 @@ def main():
             (90, 200),
             cv2.FONT_HERSHEY_DUPLEX,
             0.9,
-            (147,58,31),
-            1
+            (147, 58, 31),
+            1,
         )
 
         cv2.imshow("Demo", frame)
@@ -106,8 +126,6 @@ def main():
                 print("accuracy =  " + str(accuracy))
                 print("precision = " + str(precision))
                 list_of_points = []
-
-
 
         if cv2.waitKey(1) == 27:
             break
