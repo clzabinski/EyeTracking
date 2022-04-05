@@ -5,13 +5,11 @@ Check the README.md for complete documentation.
 import sys
 import os
 from flask import request
-import requests
 from math import floor
 from MathLib import calc_accuracy, calc_accuracy_avg, calc_precision
 import cv2
 from keyboard import is_pressed
 from gaze_tracking import GazeTracking
-import imutils
 from DataLib import take_point
 import ScreenResolution
 
@@ -32,7 +30,6 @@ def main():
         # We get a new frame from the webcam
         _, frame = webcam.read()
         frame = cv2.flip(frame, 1)
-        # imutils.resize(frame, width=1920, height=1080)
         # We send this frame to GazeTracking to analyze it
         gaze.refresh(frame)
         frame = gaze.annotated_frame()

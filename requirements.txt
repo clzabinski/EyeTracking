@@ -1,10 +1,13 @@
-click==8.0.4
+click==8.1.2
 cmake==3.22.2
 dlib==19.23.0
-Flask==2.0.3
-itsdangerous==2.1.1
-Jinja2==3.0.3
+Flask==2.1.1
+importlib-metadata==4.11.3
+itsdangerous==2.1.2
+Jinja2==3.1.1
 keyboard==0.13.5
 MarkupSafe==2.1.1
 numpy==1.22.2
 opencv-python==4.5.5.62
+Werkzeug==2.1.1
+zipp==3.8.0
