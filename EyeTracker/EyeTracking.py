@@ -4,6 +4,7 @@ Check the README.md for complete documentation.
 """
 import sys
 import os
+from OutlierDetection import DetectOutlier
 from flask import request
 import requests
 from math import floor
@@ -28,6 +29,9 @@ def main():
 
     number_of_datapoints = 0
     list_of_points = []
+    middle_arr_1 = []
+    middle_arr_2 = []
+    sample_count = 60
     while True:
         # We get a new frame from the webcam
         _, frame = webcam.read()
@@ -62,24 +66,31 @@ def main():
                     horiz_ratio = gaze.horizontal_ratio()
                     vert_ratio = gaze.vertical_ratio()
                     middle_point = (floor(1280 * horiz_ratio), floor(720 * vert_ratio))
+                    middle_arr_1.append(middle_point[0])
+                    middle_arr_2.append(middle_point[1])
 
-                cv2.line(
-                    frame,
-                    (int(middle_point[0]) - 5, int(middle_point[1])),
-                    (int(middle_point[0]) + 5, int(middle_point[1])),
-                    (0, 0, 255),
-                )
-                cv2.line(
-                    frame,
-                    (int(middle_point[0]), int(middle_point[1]) - 5),
-                    (int(middle_point[0]), int(middle_point[1]) + 5),
-                    (0, 0, 255),
-                )
-
-                requests.post(
-                    "http://127.0.0.1:5000/coordinates",
-                    data={"x": middle_pupil[0], "y": middle_pupil[1]},
-                )
+                    
+                    if len(middle_arr_1) == sample_count:
+                        middle_x, middle_y = DetectOutlier(middle_arr_1, middle_arr_2)
+                        cv2.line(
+                            frame,
+                            (int(middle_x) - 5, int(middle_y)),
+                            (int(middle_x) + 5, int(middle_y)),
+                            (0, 0, 255),
+                        )
+                        cv2.line(
+                            frame,
+                            (int(middle_x), int(middle_y) - 5),
+                            (int(middle_x), int(middle_y) + 5),
+                            (0, 0, 255),
+                        )
+                        middle_arr_1 = []
+                        middle_arr_2 = []
+                        requests.post(
+                            "http://127.0.0.1:5000/coordinates",
+                            #data={"x": middle_point[0], "y": middle_point[1]},
+                            data={"x":middle_x, "y": middle_y}
+                        )
         except:
             pass
         cv2.putText(
@@ -116,7 +127,7 @@ def main():
             number_of_datapoints = 21
 
         if number_of_datapoints > 0:
-            list_of_points.append(take_point(left_pupil, right_pupil, middle_pupil))
+            list_of_points.append(take_point(left_pupil, right_pupil, middle_point))
             number_of_datapoints -= 1
             if number_of_datapoints == 0:
                 accuracy = calc_accuracy(list_of_points, (690, 210), 60)

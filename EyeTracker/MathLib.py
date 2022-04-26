@@ -8,8 +8,8 @@ def calc_accuracy(list_of_points, actual_point, d):
             math.degrees(
                 math.atan(
                     math.sqrt(
-                    math.pow(list_of_points[i][0] - actual_point[0], 2)
-                    + math.pow(list_of_points[i][1] - actual_point[1], 2)
+                        math.pow(list_of_points[i][0] - actual_point[0], 2)
+                        + math.pow(list_of_points[i][1] - actual_point[1], 2)
                     )
                     / d
                 )
