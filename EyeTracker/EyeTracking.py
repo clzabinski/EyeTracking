@@ -6,7 +6,6 @@ import sys
 import os
 from OutlierDetection import DetectOutlier
 from flask import request
-import requests
 from math import floor
 from MathLib import calc_accuracy, calc_accuracy_avg, calc_precision
 import cv2
@@ -17,9 +16,17 @@ from DataLib import take_point
 import ScreenResolution
 
 screenrez = ScreenResolution.get_screen_resolution()
-
-
 def main():
+    test_senario = True
+    test_points = [
+        (320,180),(640,180),(960,180),(1280,180),(1600,180),
+        (320,360),(640,360),(960,360),(1280,360),(1600,360),
+        (320,540),(640,540),(960,540),(1280,540),(1600,540),
+        (360,720),(640,720),(960,720),(1280,720),(1600,720),
+        (360,900),(640,900),(960,900),(1280,900),(1600,900)
+    ]
+
+    test_index = 0
     gaze = GazeTracking()
     webcam = cv2.VideoCapture(0)
     webcam.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
@@ -129,7 +136,7 @@ def main():
         if number_of_datapoints > 0:
             list_of_points.append(take_point(left_pupil, right_pupil, middle_point))
             number_of_datapoints -= 1
-            if number_of_datapoints == 0:
+            if number_of_datapoints == 0 and test_senario == False:
                 accuracy = calc_accuracy(list_of_points, (690, 210), 60)
                 avg_accuracy = calc_accuracy_avg(accuracy)
                 precision = calc_precision(list_of_points, (690, 210), 60)
@@ -137,7 +144,25 @@ def main():
                 print("accuracy avg = " + str(avg_accuracy))
                 print("accuracy =  " + str(accuracy))
                 print("precision = " + str(precision))
+                take_point("=====", "=====", "=====")
                 list_of_points = []
+
+            try: 
+                if number_of_datapoints == 0 and test_senario:
+                    accuracy = calc_accuracy(list_of_points, test_points[test_index], 60)
+                    avg_accuracy = calc_accuracy_avg(accuracy)
+                    precision =calc_precision(list_of_points, test_points[test_index], 60)
+
+                    take_point("=====", "=====", "=====")
+                    print("accuracy avg for point " + str(test_index + 1) + ":" + str(avg_accuracy))
+                    print("accuracy for point " + str(test_index + 1) + ":" + str(accuracy))
+                    print("precision for point " + str(test_index + 1) + ":" + str(precision))
+                    test_index += 1
+
+                    if test_index > 24:
+                        test_senario = False
+            except:
+                pass
 
         if cv2.waitKey(1) == 27:
             break
