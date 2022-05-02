@@ -16,14 +16,37 @@ from DataLib import take_point
 import ScreenResolution
 
 screenrez = ScreenResolution.get_screen_resolution()
+
+
 def main():
     test_senario = True
+    header_printed = False
     test_points = [
-        (320,180),(640,180),(960,180),(1280,180),(1600,180),
-        (320,360),(640,360),(960,360),(1280,360),(1600,360),
-        (320,540),(640,540),(960,540),(1280,540),(1600,540),
-        (360,720),(640,720),(960,720),(1280,720),(1600,720),
-        (360,900),(640,900),(960,900),(1280,900),(1600,900)
+        (320, 180),
+        (640, 180),
+        (960, 180),
+        (1280, 180),
+        (1600, 180),
+        (320, 360),
+        (640, 360),
+        (960, 360),
+        (1280, 360),
+        (1600, 360),
+        (320, 540),
+        (640, 540),
+        (960, 540),
+        (1280, 540),
+        (1600, 540),
+        (360, 720),
+        (640, 720),
+        (960, 720),
+        (1280, 720),
+        (1600, 720),
+        (360, 900),
+        (640, 900),
+        (960, 900),
+        (1280, 900),
+        (1600, 900),
     ]
 
     test_index = 0
@@ -76,7 +99,6 @@ def main():
                     middle_arr_1.append(middle_point[0])
                     middle_arr_2.append(middle_point[1])
 
-                    
                     if len(middle_arr_1) == sample_count:
                         middle_x, middle_y = DetectOutlier(middle_arr_1, middle_arr_2)
                         cv2.line(
@@ -95,8 +117,8 @@ def main():
                         middle_arr_2 = []
                         requests.post(
                             "http://127.0.0.1:5000/coordinates",
-                            #data={"x": middle_point[0], "y": middle_point[1]},
-                            data={"x":middle_x, "y": middle_y}
+                            # data={"x": middle_point[0], "y": middle_point[1]},
+                            data={"x": middle_x, "y": middle_y},
                         )
         except:
             pass
@@ -129,17 +151,20 @@ def main():
         )
 
         cv2.imshow("Demo", frame)
-
+        dist_to_screen = 64
         if is_pressed(" "):
             number_of_datapoints = 21
+            if header_printed == False:
+                take_point("BEGINING", "TEST", "HERE")
+                header_printed = True
 
         if number_of_datapoints > 0:
             list_of_points.append(take_point(left_pupil, right_pupil, middle_point))
             number_of_datapoints -= 1
             if number_of_datapoints == 0 and test_senario == False:
-                accuracy = calc_accuracy(list_of_points, (690, 210), 60)
+                accuracy = calc_accuracy(list_of_points, (690, 210), dist_to_screen)
                 avg_accuracy = calc_accuracy_avg(accuracy)
-                precision = calc_precision(list_of_points, (690, 210), 60)
+                precision = calc_precision(list_of_points, (690, 210), dist_to_screen)
 
                 print("accuracy avg = " + str(avg_accuracy))
                 print("accuracy =  " + str(accuracy))
@@ -147,22 +172,47 @@ def main():
                 take_point("=====", "=====", "=====")
                 list_of_points = []
 
-            try: 
+            try:
                 if number_of_datapoints == 0 and test_senario:
-                    accuracy = calc_accuracy(list_of_points, test_points[test_index], 60)
+                    accuracy = calc_accuracy(
+                        list_of_points, test_points[test_index], dist_to_screen
+                    )
                     avg_accuracy = calc_accuracy_avg(accuracy)
-                    precision =calc_precision(list_of_points, test_points[test_index], 60)
+                    precision = calc_precision(
+                        list_of_points, test_points[test_index], dist_to_screen
+                    )
 
+                    print(
+                        "accuracy avg for point "
+                        + str(test_index + 1)
+                        + ":"
+                        + str(avg_accuracy)
+                    )
+                    print(
+                        "accuracy for point "
+                        + str(test_index + 1)
+                        + ":"
+                        + str(accuracy)
+                    )
+                    print(
+                        "precision for point "
+                        + str(test_index + 1)
+                        + ":"
+                        + str(precision)
+                    )
+                    take_point("Accuarcy Avg", str(avg_accuracy), "N/A")
+                    take_point("Accuarcy", str(accuracy), "N/A")
+                    take_point("Precision", str(precision), "N/A")
                     take_point("=====", "=====", "=====")
-                    print("accuracy avg for point " + str(test_index + 1) + ":" + str(avg_accuracy))
-                    print("accuracy for point " + str(test_index + 1) + ":" + str(accuracy))
-                    print("precision for point " + str(test_index + 1) + ":" + str(precision))
+
                     test_index += 1
+                    list_of_points = []
 
                     if test_index > 24:
                         test_senario = False
+                        take_point("END", "TEST", "HERE")
             except:
-                pass
+                take_point("N/A", "N/A", "N/A")
 
         if cv2.waitKey(1) == 27:
             break
