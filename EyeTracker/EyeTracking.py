@@ -11,7 +11,7 @@ from MathLib import calc_accuracy, calc_accuracy_avg, calc_precision
 import cv2
 from keyboard import is_pressed
 from gaze_tracking import GazeTracking
-import imutils
+#import imutils
 from DataLib import take_point
 import ScreenResolution
 
@@ -95,7 +95,8 @@ def main():
                 if gaze.horizontal_ratio():
                     horiz_ratio = gaze.horizontal_ratio()
                     vert_ratio = gaze.vertical_ratio()
-                    middle_point = (floor(1280 * horiz_ratio), floor(720 * vert_ratio))
+                    #middle_point = (floor(1920 * horiz_ratio), floor(1080 * vert_ratio))
+                    middle_point = ((floor((left_pupil[0] + right_pupil[0])) * horiz_ratio),floor((left_pupil[1] + right_pupil[1]) * vert_ratio))
                     middle_arr_1.append(middle_point[0])
                     middle_arr_2.append(middle_point[1])
 
@@ -149,6 +150,12 @@ def main():
             (147, 58, 31),
             1,
         )
+        cv2.putText(frame, "Ratios: " + str(horiz_ratio) + " " + str(vert_ratio),
+            (90, 235),
+            cv2.FONT_HERSHEY_DUPLEX,
+            0.9,
+            (147, 58, 31),
+            1,)
 
         cv2.imshow("Demo", frame)
         dist_to_screen = 64
